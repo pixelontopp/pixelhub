@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Hub</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#08111f;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    width:360px;
+    background:#13233f;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 0 30px #3b82f655;
+}
+
+h1{
+    color:#6bbcff;
+    margin-bottom:18px;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#3b82f6;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+#status{
+    margin-top:15px;
+    font-weight:bold;
+    color:#6bbcff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>Pixel Hub</h1>
+
+<button onclick="generateKey()">Generate Key</button>
+
+<div id="status"></div>
+
+<a href="https://discord.gg/YOURINVITE" target="_blank">
+<button>💬 Discord</button>
+</a>
+
+<a href="https://youtube.com/@YOURCHANNEL" target="_blank">
+<button>▶️ YouTube</button>
+</a>
+
+</div>
+
+<script>
+let hasGenerated = false;
+
+function generateKey(){
+    const status = document.getElementById("status");
+
+    if(hasGenerated){
+        status.style.color = "#ff4a4a"; 
+        status.innerHTML = "You have already generated a key!";
+        return;
+    }
+
+    hasGenerated = true;
+    status.style.color = "#6bbcff";
+
+    let seconds = 30;
+    status.innerHTML = "Loading... " + seconds + "s";
+
+    const timer = setInterval(function(){
+        seconds--;
+        status.innerHTML = "Loading... " + seconds + "s";
+
+        if(seconds <= 0){
+            clearInterval(timer);
+            
+            // Mathematical time encoding algorithm
+            const hourID = Math.floor(Date.now() / 3600000); // Current UTC Hour
+            const scrambled = (hourID * 3) + 102345; // Secret salt formula
+            
+            status.innerHTML = "PIXELKEY_" + scrambled;
+        }
+    }, 1000);
+}
+</script>
+
+</body>
+</html>
+
