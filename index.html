@@ -142,7 +142,7 @@ button:disabled {
 <button>💬 Discord</button>
 </a>
 
-<a href="https://youtube.com/@PixelOnTopp" target="_blank">
+<a href="https://youtube.com/@pixelontopp" target="_blank">
 <button>▶️ YouTube</button>
 </a>
 
@@ -151,14 +151,14 @@ button:disabled {
 <script>
 // ==================== CONFIGURATION SETTINGS ====================
 // ⚠️ PASTE YOUR LIVE CLOUDFLARE WORKER ROUTE URL HERE (No trailing slash)
-const BACKEND_URL = "https://pixel-key-backend.yourname.workers.dev"; 
+const BACKEND_URL = "https://pixel-key-backend.helloytrbx.workers.dev"; 
 
-const LINKVERTISE_URL = "https://direct-link.net/6952702/cA4UZzAjrUr6"; 
+const LINKVERTISE_URL = "https://link-hub.net/1406248/x5BzaK3UXP3R"; 
 const CLEAN_MAIN_URL = "https://pixelontopp.github.io/pixelhub/";
 
-const MINIMUM_TIME_REQUIRED = 10000; // 10 seconds bypass protection
+const MINIMUM_TIME_REQUIRED = 15000; // 15 seconds bypass protection
 const BAN_DURATION = 120000; // 2 minutes bypass ban
-
+l
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const statusDiv = document.getElementById("status");
@@ -183,7 +183,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const clickTime = localStorage.getItem('clickTime');
         const currentTime = Date.now();
 
-        -- Speed check to catch link bypass bots/tools
+        // Fixed comment syntax error here
         if (!clickTime || (currentTime - clickTime) < MINIMUM_TIME_REQUIRED) {
             const newBanExpiry = Date.now() + BAN_DURATION;
             localStorage.setItem('bannedUntil', newBanExpiry);
@@ -196,12 +196,9 @@ window.addEventListener('DOMContentLoaded', () => {
         statusDiv.style.color = "#22c55e";
         statusDiv.innerHTML = "Syncing key with secure database...";
         
-        // Generate their static unique 6-digit permanent key identity
         const randomID = Math.floor(100000 + Math.random() * 900000);
         const newPermanentKey = "PIXELKEY_PERM_" + randomID;
 
-        // Automatically pass 'PIXELMASTER_2026' to your backend in the background 
-        // so it passes the safety check and writes the generated key to your KV database
         fetch(`${BACKEND_URL}/addkey`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -213,7 +210,6 @@ window.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             if (data.success) {
-                // Lock it into local browser memory
                 localStorage.setItem('pixelPermanentKey', newPermanentKey);
                 localStorage.removeItem('clickTime'); 
                 showPermanentKey(newPermanentKey);
@@ -232,7 +228,6 @@ window.addEventListener('DOMContentLoaded', () => {
 function generateKey(){
     if(localStorage.getItem('pixelPermanentKey')) return;
 
-    // Time stamp the departure
     localStorage.setItem('clickTime', Date.now());
     
     document.getElementById("status").style.color = "#6bbcff";
@@ -243,7 +238,6 @@ function generateKey(){
     }, 1000);
 }
 
-// Renders the key box layout with your clean Copy button
 function showPermanentKey(key) {
     const statusDiv = document.getElementById("status");
     const genBtn = document.getElementById("genBtn");
@@ -260,7 +254,6 @@ function showPermanentKey(key) {
     `;
 }
 
-// Copies the key, runs animations, and cleans up the URL string
 function copyAndRedirect(key) {
     navigator.clipboard.writeText(key).then(() => {
         const copyBtn = document.getElementById("copyBtn");
