@@ -14,167 +14,52 @@
 }
 
 body {
-    background-color: #08111f; 
+    background: #08111f;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    overflow: hidden;
 }
 
-/* --- Hamburger Menu Icon (Three Lines) --- */
-.menu-btn {
-    position: fixed;
-    top: 25px;
-    left: 25px;
-    z-index: 1001;
+/* Card layout - Removed fixed heights so buttons can NEVER be hidden */
+.card {
+    width: 360px;
+    background: #13233f;
+    border-radius: 18px;
+    padding: 35px 25px 25px 25px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.25);
+    position: relative;
+}
+
+/* Three Dots Menu Button */
+.menu-dots {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 24px;
+    color: #6bbcff;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    transition: all 0.2s ease;
+    z-index: 10;
+    user-select: none;
     padding: 5px;
 }
 
-.menu-btn .bar {
-    width: 30px;
-    height: 3px;
-    background-color: #6bbcff;
-    border-radius: 2px;
-    transition: 0.3s ease;
-}
-
-/* Transforms the 3 lines into an X when opened */
-.menu-btn.open .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.menu-btn.open .bar:nth-child(2) { opacity: 0; }
-.menu-btn.open .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-/* --- Sidebar Dashboard Panel --- */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: -340px;
-    width: 320px;
-    height: 100vh;
-    background: #0d182b; 
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 1000;
-    transition: 0.3s ease;
-    padding: 90px 20px 20px 20px;
-    box-shadow: 5px 0 30px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    overflow-y: auto;
-    
-    /* CRITICAL FIX: Prevents the closed sidebar from blocking screen clicks */
-    visibility: hidden; 
-}
-
-.sidebar.open {
-    left: 0;
-    visibility: visible;
-}
-
-.sidebar h2 {
-    color: #6bbcff;
-    font-size: 22px;
-    border-bottom: 2px solid rgba(107, 188, 255, 0.2);
-    padding-bottom: 8px;
-}
-
-.sidebar-section h3 {
-    font-size: 14px;
-    color: #a3cbff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-}
-
-.key-box {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    font-size: 14px;
-    text-align: center;
-}
-
-.key-box.permanent {
-    border-color: #f59e0b;
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.05);
-    text-shadow: 0 0 5px rgba(245, 158, 11, 0.3);
-}
-
-.history-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 350px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-.history-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    padding: 10px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-left: 4px solid #ef4444;
-    font-size: 13px;
-}
-
-.history-item.active {
-    border-left-color: #10b981;
-}
-
-.history-item .key-text {
-    font-family: monospace;
-    color: #e2e8f0;
-}
-
-.status-badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: bold;
-}
-
-.history-item.expired .status-badge {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-}
-
-.history-item.active .status-badge {
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
-}
-
-/* --- Main Central Card UI --- */
-.card {
-    width: 360px;
-    background: #13233f; 
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 18px;
-    padding: 25px;
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);
+.menu-dots:hover {
+    color: #ffffff;
+    transform: scale(1.1);
 }
 
 h1 {
     color: #6bbcff;
     margin-bottom: 18px;
     font-size: 28px;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
+/* Clean Button Animations */
 button {
     width: 100%;
     padding: 13px;
@@ -186,31 +71,333 @@ button {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.15s ease, background 0.2s;
     position: relative;
     overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-    transform: scale(1.03);
+    transform: translateY(-2px);
     background: #2563eb;
+    box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
 }
 
 button:active {
-    transform: scale(0.98);
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 }
 
+a {
+    text-decoration: none;
+    width: 100%;
+}
+
+/* Branding button colors */
+a[href*="discord"] button { background: #5865F2; }
+a[href*="discord"] button:hover { background: #4752C4; box-shadow: 0 6px 15px rgba(88, 101, 242, 0.4); }
+
+a[href*="youtube"] button { background: #FF0000; }
+a[href*="youtube"] button:hover { background: #CC0000; box-shadow: 0 6px 15px rgba(255, 0, 0, 0.4); }
+
+/* Key Status Area */
 #status {
     margin-top: 15px;
     font-weight: bold;
     color: #6bbcff;
-    min-height: 20px;
+    min-height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
-/* --- Particle Sparks Effect --- */
-.particle {
-    position: fixed;
+/* Copy Button Dynamic Entry */
+.copy-btn {
+    width: auto;
+    display: inline-flex;
+    padding: 6px 12px;
+    margin: 0;
+    font-size: 13px;
+    background: #10b981;
+    border-radius: 6px;
+    animation: popIn 0.3s ease forwards;
+}
+.copy-btn:hover { background: #059669; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4); }
+
+@keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Safe Overlay with Fade-in instead of Slide-in */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0d192d;
+    z-index: 5;
+    border-radius: 18px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    opacity: 0;
     pointer-events: none;
-    border-radius: 50%;
-    animation: explode 0.5s ease-out forwards;
-    z-index: 999
+    transition: opacity 0.25s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 10px;
+}
+
+.overlay-title {
+    color: #6bbcff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.close-btn {
+    font-size: 24px;
+    color: #ef4444;
+    cursor: pointer;
+    transition: transform 0.2s;
+    user-select: none;
+}
+.close-btn:hover { transform: scale(1.1); }
+
+.overlay-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.panel {
+    display: none;
+}
+.panel.active {
+    display: block;
+}
+
+/* History Items styling */
+.history-item {
+    background: #1e293b;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    border-left: 4px solid #3b82f6;
+}
+.history-item.expired { border-left-color: #ef4444; }
+
+.history-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.status-badge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.status-badge.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.status-badge.expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+/* Permanent Key layout */
+.perm-text {
+    line-height: 1.6;
+    color: #cbd5e1;
+    font-size: 14px;
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="menu-dots" onclick="openMenu()">&#8942;</div>
+
+    <h1>Pixel Hub</h1>
+
+    <button onclick="generateKey()">Generate Key</button>
+
+    <div id="status"></div>
+
+    <a href="https://discord.gg/YOURINVITE" target="_blank">
+        <button>💬 Discord</button>
+    </a>
+
+    <a href="https://youtube.com/@YOURCHANNEL" target="_blank">
+        <button>▶️ YouTube</button>
+    </a>
+
+    <div class="overlay" id="navOverlay">
+        <div class="overlay-header">
+            <span class="overlay-title" id="menuTitle">Menu</span>
+            <span class="close-btn" onclick="closeOverlay()">&times;</span>
+        </div>
+        
+        <div class="overlay-body">
+            <div class="panel active" id="mainMenuPanel">
+                <button onclick="closeOverlay()" style="background: #1e293b; border: 1px solid #3b82f6;">🏠 Home (Key Generator)</button>
+                <button onclick="switchPanel('history')">📜 History</button>
+                <button onclick="switchPanel('permanent')">🔑 Permanent Key</button>
+            </div>
+
+            <div class="panel" id="historyPanel">
+                <div id="historyList"></div>
+                <button onclick="switchPanel('main')" style="background: #475569;">Back</button>
+            </div>
+
+            <div class="panel" id="permanentPanel">
+                <p class="perm-text">
+                    To get permanent key join the discord server and verify, go to tickets section and make a ticket and just wait for the owner to arrive the owner will not always be online so be patient.
+                </p>
+                <button onclick="switchPanel('main')" style="background: #475569;">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let hasGenerated = false;
+let keyHistory = JSON.parse(localStorage.getItem('pixelKeys')) || [];
+
+function generateKey(){
+    const status = document.getElementById("status");
+
+    if(hasGenerated){
+        status.style.color = "#ff4a4a"; 
+        status.innerHTML = "You have already generated a key!";
+        return;
+    }
+
+    hasGenerated = true;
+    status.style.color = "#6bbcff";
+
+    let seconds = 30;
+    status.innerHTML = "Loading... " + seconds + "s";
+
+    const timer = setInterval(function(){
+        seconds--;
+        status.innerHTML = "Loading... " + seconds + "s";
+
+        if(seconds <= 0){
+            clearInterval(timer);
+            
+            // Mathematical time encoding algorithm
+            const hourID = Math.floor(Date.now() / 3600000); // Current UTC Hour
+            const scrambled = (hourID * 3) + 102345; // Secret salt formula
+            const finalKey = "PIXELKEY_" + scrambled;
+            
+            // Render key alongside an animated Copy Button
+            status.innerHTML = `<span style="font-family:monospace; font-size:15px;">${finalKey}</span><button class="copy-btn" onclick="copyToClipboard('${finalKey}')">Copy</button>`;
+            
+            // Save to history list
+            saveToHistory(finalKey, hourID);
+        }
+    }, 1000);
+}
+
+// Copy Engine
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const copyBtn = document.querySelector('.copy-btn');
+        if(copyBtn) {
+            copyBtn.innerText = "Copied!";
+            copyBtn.style.background = "#059669";
+            setTimeout(() => {
+                copyBtn.innerText = "Copy";
+                copyBtn.style.background = "#10b981";
+            }, 2000);
+        }
+    });
+}
+
+// History Tracker Configuration
+function saveToHistory(key, hourID) {
+    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    keyHistory.unshift({ key, hourID, timestamp });
+    localStorage.setItem('pixelKeys', JSON.stringify(keyHistory));
+}
+
+// Menu Window Controllers
+function openMenu() {
+    document.getElementById('navOverlay').classList.add('active');
+    switchPanel('main');
+}
+
+function closeOverlay() {
+    document.getElementById('navOverlay').classList.remove('active');
+}
+
+function switchPanel(panelName) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const title = document.getElementById('menuTitle');
+
+    if(panelName === 'main') {
+        title.innerText = "Menu";
+        document.getElementById('mainMenuPanel').classList.add('active');
+    } else if(panelName === 'history') {
+        title.innerText = "Generation History";
+        document.getElementById('historyPanel').classList.add('active');
+        renderHistory();
+    } else if(panelName === 'permanent') {
+        title.innerText = "Permanent Key";
+        document.getElementById('permanentPanel').classList.add('active');
+    }
+}
+
+function renderHistory() {
+    const listContainer = document.getElementById('historyList');
+    listContainer.innerHTML = '';
+    
+    if(keyHistory.length === 0) {
+        listContainer.innerHTML = '<p style="text-align:center; color:#64748b; margin: 20px 0;">No keys generated yet.</p>';
+        return;
+    }
+
+    const currentHourID = Math.floor(Date.now() / 3600000);
+
+    keyHistory.forEach(item => {
+        const isExpired = currentHourID !== item.hourID;
+        const div = document.createElement('div');
+        div.className = `history-item ${isExpired ? 'expired' : ''}`;
+        
+        div.innerHTML = `
+            <strong style="color: #6bbcff; font-family: monospace; font-size:14px; word-break:break-all;">${item.key}</strong>
+            <div class="history-meta">
+                <span>Time: ${item.timestamp}</span>
+                <span class="status-badge ${isExpired ? 'expired' : 'active'}">${isExpired ? 'Expired' : 'Active'}</span>
+            </div>
+        `;
+        listContainer.appendChild(div);
+    });
+}
+</script>
+
+</body>
+</html>
