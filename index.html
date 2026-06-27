@@ -24,12 +24,6 @@
     100% { transform: scale(1); }
 }
 
-@keyframes shakeError {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
-}
-
 *{
     margin:0;
     padding:0;
@@ -62,26 +56,6 @@ h1{
     margin-bottom:18px;
 }
 
-input[type="text"] {
-    width: 100%;
-    padding: 13px;
-    margin-top: 10px;
-    background: #0b1424;
-    border: 1.5px solid #3b82f6;
-    border-radius: 10px;
-    color: white;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    outline: none;
-    transition: all 0.25s ease;
-}
-
-input[type="text"]:focus {
-    border-color: #6bbcff;
-    box-shadow: 0 0 12px #6bbcff44;
-}
-
 button{
     width:100%;
     padding:13px;
@@ -110,14 +84,10 @@ button:disabled {
 #status{
     margin-top:15px;
     font-weight:bold;
-    min-height: 20px;
-    transition: all 0.3s ease;
+    color:#6bbcff;
 }
 
-.error-shake {
-    animation: shakeError 0.4s ease-in-out;
-}
-
+/* Custom layout for the unlocked key area */
 .key-container {
     margin-top: 10px;
     animation: fadeIn 0.4s ease-out forwards;
@@ -150,160 +120,171 @@ button:disabled {
 .success-animate {
     animation: successPop 0.3s ease-in-out;
 }
-
-.discord-section {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #1e293b;
-}
-
-.discord-static-btn {
-    background: #5865F2;
-    cursor: default;
-}
-
-.discord-static-btn:hover {
-    transform: none;
-    background: #5865F2;
-}
-
-.discord-text {
-    color: #94a3b8;
-    font-size: 12px;
-    margin-top: 8px;
-    line-height: 1.4;
-    font-weight: normal;
-}
 </style>
 </head>
 
 <body>
 
-<div class="card" id="mainCard">
+<div class="card">
 
 <h1>Pixel Hub</h1>
 
-<input type="text" id="secretCodeInput" placeholder="Enter Secret Code Here...">
-<button id="genBtn" onclick="processCodeVerification()">Generate Key</button>
+<button id="genBtn" onclick="generateKey()">Generate Key</button>
 
 <div id="status"></div>
 
-<div class="discord-section">
-    <button class="discord-static-btn">💬 Discord</button>
-    <div class="discord-text">
-        To get the a code you need to buy it from PixelOnTop in his discord server!
-    </div>
-</div>
+<a href="https://pixelontopp.github.io/Generated-Keys/" target="_blank">
+<button>🔑 GENERATED KEYS</button>
+</a>
+
+<a href="https://discord.gg/YOURINVITE" target="_blank">
+<button>💬 Discord</button>
+</a>
+
+<a href="https://youtube.com/@YOURCHANNEL" target="_blank">
+<button>▶️ YouTube</button>
+</a>
 
 </div>
 
 <script>
-// Your specific master code configuration
-const ALLOWED_SECRET_CODES = ["PIXELMASTER_2026"];
-
-// ⚠️ PASTE YOUR LIVE CLOUDFLARE WORKER URL HERE (No trailing slash)
-const BACKEND_URL = "https://pixel-key-backend.yourname.workers.dev"; 
+// Configuration Settings
+const LINKVERTISE_URL = "https://linkvertise.com/your-link-here"; 
 const CLEAN_MAIN_URL = "https://pixelontopp.github.io/pixelhub/";
 
+const MINIMUM_TIME_REQUIRED = 10000; // 10 seconds bypass protection
+const BAN_DURATION = 120000; // 2 minutes bypass ban
+
 window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const statusDiv = document.getElementById("status");
+    const genBtn = document.getElementById("genBtn");
+
+    // 1. Check if user is currently timed out/banned
+    const bannedUntil = localStorage.getItem('bannedUntil');
+    if (bannedUntil && Date.now() < bannedUntil) {
+        startBanCountdown(bannedUntil - Date.now());
+        return;
+    }
+
+    // 2. Check if they already have an unlocked permanent key saved
     const savedPermanentKey = localStorage.getItem('pixelPermanentKey');
     if (savedPermanentKey) {
         showPermanentKey(savedPermanentKey);
+        return;
+    }
+
+    // 3. Process user landing back from Linkvertise
+    if (urlParams.get('status') === 'completed') {
+        const clickTime = localStorage.getItem('clickTime');
+        const currentTime = Date.now();
+
+        // Speed check to catch link bypass tools
+        if (!clickTime || (currentTime - clickTime) < MINIMUM_TIME_REQUIRED) {
+            const newBanExpiry = Date.now() + BAN_DURATION;
+            localStorage.setItem('bannedUntil', newBanExpiry);
+            startBanCountdown(BAN_DURATION);
+            return;
+        }
+
+        genBtn.innerHTML = "Verifying...";
+        genBtn.disabled = true;
+        statusDiv.style.color = "#22c55e";
+        statusDiv.innerHTML = "Processing system check...";
+        
+        setTimeout(() => {
+            // Generate their static unique 6-digit permanent key identity
+            const randomID = Math.floor(100000 + Math.random() * 900000);
+            const newPermanentKey = "PIXELKEY_PERM_" + randomID;
+            
+            // Lock it into browser memory
+            localStorage.setItem('pixelPermanentKey', newPermanentKey);
+            localStorage.removeItem('clickTime'); 
+            
+            showPermanentKey(newPermanentKey);
+        }, 1200);
     }
 });
 
-function processCodeVerification() {
-    const statusDiv = document.getElementById("status");
-    const codeInput = document.getElementById("secretCodeInput");
-    const cardEl = document.getElementById("mainCard");
-    const enteredValue = codeInput.value.trim();
+function generateKey(){
+    if(localStorage.getItem('pixelPermanentKey')) return;
 
-    statusDiv.classList.remove("error-shake");
-    cardEl.classList.remove("error-shake");
+    // Time stamp the departure
+    localStorage.setItem('clickTime', Date.now());
+    
+    document.getElementById("status").style.color = "#6bbcff";
+    document.getElementById("status").innerHTML = "Redirecting to Linkvertise...";
 
-    if (localStorage.getItem('pixelPermanentKey')) {
-        statusDiv.style.color = "#ff4a4a";
-        statusDiv.innerHTML = "You haved already generated a permanent key!";
-        cardEl.classList.add("error-shake");
-        return;
-    }
-
-    if (enteredValue === "") {
-        statusDiv.style.color = "#ff4a4a";
-        statusDiv.innerHTML = "Please enter a code first!";
-        cardEl.classList.add("error-shake");
-        return;
-    }
-
-    if (ALLOWED_SECRET_CODES.includes(enteredValue)) {
-        statusDiv.style.color = "#6bbcff";
-        statusDiv.innerHTML = "Registering key with database...";
-
-        const randomID = Math.floor(100000 + Math.random() * 900000);
-        const newPermanentKey = "PIXELKEY_PERM_" + randomID;
-
-        // Secure background communications with the database API
-        fetch(`${BACKEND_URL}/addkey`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ secretCode: enteredValue, generatedKey: newPermanentKey })
-        })
-        .then(res => {
-            if (!res.ok) throw new Error();
-            return res.json();
-        })
-        .then(data => {
-            if(data.success) {
-                if(codeInput) codeInput.style.display = "none";
-                statusDiv.innerHTML = "";
-                localStorage.setItem('pixelPermanentKey', newPermanentKey);
-                showPermanentKey(newPermanentKey);
-            }
-        })
-        .catch(err => {
-            statusDiv.style.color = "#ff4a4a";
-            statusDiv.innerHTML = "Database communication error!";
-            cardEl.classList.add("error-shake");
-        });
-    } else {
-        statusDiv.style.color = "#ff4a4a";
-        statusDiv.innerHTML = "Code doesnt exist!";
-        cardEl.classList.add("error-shake");
-    }
+    setTimeout(() => {
+        window.location.href = https://link-hub.net/1406248/x5BzaK3UXP3R;
+    }, 1000);
 }
 
+// Renders the key box layout with your new Copy button
 function showPermanentKey(key) {
     const statusDiv = document.getElementById("status");
     const genBtn = document.getElementById("genBtn");
-    const codeInput = document.getElementById("secretCodeInput");
     
-    if(codeInput) codeInput.style.display = "none";
-    
-    genBtn.innerHTML = "Key Active";
+    genBtn.innerHTML = "Key Unlocked";
     genBtn.style.background = "#1e293b"; 
     genBtn.disabled = true;
     
     statusDiv.innerHTML = `
         <div class="key-container">
             <span class="key-box" id="keyText">${key}</span>
-            <button class="copy-btn" id="copyBtn" onclick="copyAndCleanUpURL('${key}')">📋 Copy</button>
+            <button class="copy-btn" id="copyBtn" onclick="copyAndRedirect('${key}')">📋 Copy</button>
         </div>
     `;
 }
 
-function copyAndCleanUpURL(key) {
+// Copies the key, runs animations, and cleans up the URL string
+function copyAndRedirect(key) {
     navigator.clipboard.writeText(key).then(() => {
         const copyBtn = document.getElementById("copyBtn");
+        
+        // Trigger success animation styles
         copyBtn.classList.add("success-animate");
         copyBtn.innerHTML = "✨ Copied Key!";
         copyBtn.style.background = "#10b981"; 
         
+        // Delay redirection slightly so they can appreciate the clean animation
         setTimeout(() => {
-            window.location.href = CLEAN_MAIN_URL;
+            window.location.href = https://pixelontopp.github.io/pixelhub/;
         }, 1200);
     }).catch(err => {
-        window.location.href = CLEAN_MAIN_URL;
+        // Fallback redirection safety net
+        window.location.href = https://pixelontopp.github.io/pixelhub/;
     });
+}
+
+function startBanCountdown(duration) {
+    const statusDiv = document.getElementById("status");
+    const genBtn = document.getElementById("genBtn");
+    
+    genBtn.disabled = true;
+    genBtn.innerHTML = "System Locked";
+    genBtn.style.background = "#ef4444"; 
+
+    let timeRemaining = Math.ceil(duration / 1000);
+    statusDiv.style.color = "#ff4a4a";
+    statusDiv.innerHTML = `Bypass detected! Blocked for ${timeRemaining}s`;
+
+    const banTimer = setInterval(() => {
+        timeRemaining--;
+        statusDiv.innerHTML = `Bypass detected! Blocked for ${timeRemaining}s`;
+
+        if (timeRemaining <= 0) {
+            clearInterval(banTimer);
+            localStorage.removeItem('bannedUntil');
+            localStorage.removeItem('clickTime');
+            
+            genBtn.disabled = false;
+            genBtn.innerHTML = "Generate Key";
+            genBtn.style.background = "#3b82f6";
+            statusDiv.innerHTML = "";
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, 1000);
 }
 </script>
 
