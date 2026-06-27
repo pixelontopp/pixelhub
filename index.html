@@ -6,115 +6,101 @@
 <title>Pixel Hub</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-body{
-    background:#08111f;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+body {
+    background: linear-gradient(rgba(8, 17, 31, 0.85), rgba(8, 17, 31, 0.85)), 
+                url('https://assetdelivery.roblox.com/v1/asset/?id=90067703911337');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.card{
-    width:360px;
-    background:#13233f;
-    border-radius:18px;
-    padding:25px;
-    text-align:center;
-    box-shadow:0 0 30px #3b82f655;
+/* --- Hamburger Menu Icon --- */
+.menu-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    z-index: 1001;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 5px;
+    transition: 0.3s;
 }
 
-h1{
-    color:#6bbcff;
-    margin-bottom:18px;
+.menu-btn .bar {
+    width: 30px;
+    height: 3px;
+    background-color: #6bbcff;
+    border-radius: 2px;
+    transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-button{
-    width:100%;
-    padding:13px;
-    margin-top:10px;
-    border:none;
-    border-radius:10px;
-    background:#3b82f6;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    transition:.25s;
+/* Transforms 3 lines into an 'X' when open */
+.menu-btn.open .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.menu-btn.open .bar:nth-child(2) { opacity: 0; }
+.menu-btn.open .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+/* --- Sidebar Dashboard --- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -340px;
+    width: 320px;
+    height: 100vh;
+    background: rgba(13, 24, 43, 0.92);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1000;
+    transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 90px 20px 20px 20px;
+    box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    overflow-y: auto;
 }
 
-button:hover{
-    transform:scale(1.03);
+.sidebar.open {
+    left: 0;
 }
 
-#status{
-    margin-top:15px;
-    font-weight:bold;
-    color:#6bbcff;
+.sidebar h2 {
+    color: #6bbcff;
+    font-size: 22px;
+    border-bottom: 2px solid rgba(107, 188, 255, 0.2);
+    padding-bottom: 8px;
 }
-</style>
-</head>
 
-<body>
-
-<div class="card">
-
-<h1>Pixel Hub</h1>
-
-<button onclick="generateKey()">Generate Key</button>
-
-<div id="status"></div>
-
-<a href="https://discord.gg/VbzEHgtBR" target="_blank">
-<button>💬 Discord</button>
-</a>
-
-<a href="https://youtube.com/@PixelOnTopp" target="_blank">
-<button>▶️ YouTube</button>
-</a>
-
-</div>
-
-<script>
-let hasGenerated = false;
-
-function generateKey(){
-    const status = document.getElementById("status");
-
-    if(hasGenerated){
-        status.style.color = "#ff4a4a"; 
-        status.innerHTML = "You have already generated a key!";
-        return;
-    }
-
-    hasGenerated = true;
-    status.style.color = "#6bbcff";
-
-    let seconds = 30;
-    status.innerHTML = "Loading... " + seconds + "s";
-
-    const timer = setInterval(function(){
-        seconds--;
-        status.innerHTML = "Loading... " + seconds + "s";
-
-        if(seconds <= 0){
-            clearInterval(timer);
-            
-            // Mathematical time encoding algorithm
-            const hourID = Math.floor(Date.now() / 3600000); // Current UTC Hour
-            const scrambled = (hourID * 3) + 102345; // Secret salt formula
-            
-            status.innerHTML = "PIXELKEY_" + scrambled;
-        }
-    }, 1000);
+.sidebar-section h3 {
+    font-size: 14px;
+    color: #a3cbff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
 }
-</script>
 
-</body>
-</html>
+/* Key visual display containers */
+.key-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+}
