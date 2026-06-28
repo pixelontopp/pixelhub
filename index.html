@@ -81,6 +81,17 @@ button:disabled {
     cursor: not-allowed;
 }
 
+/* Custom Gold Tint Styling for Permanent Key Button */
+#permBtn {
+    background: #eab308;
+    color: #0f172a;
+}
+
+#permBtn:hover:not(:disabled) {
+    background: #ca8a04;
+    transform: scale(1.03);
+}
+
 #status{
     margin-top:15px;
     font-weight:bold;
@@ -131,6 +142,7 @@ button:disabled {
 <h1>Pixel Hub</h1>
 
 <button id="genBtn" onclick="generateKey()">Generate Key</button>
+<button id="permBtn" onclick="goToPermanentPage()">⭐ Permanent Key</button>
 
 <div id="status"></div>
 
@@ -154,8 +166,12 @@ const BACKEND_URL = "https://pixel-key-backend.helloytrbx.workers.dev";
 const LINKVERTISE_URL = "https://link-hub.net/1406248/x5BzaK3UXP3R"; 
 const CLEAN_MAIN_URL = "https://pixelontopp.github.io/pixelhub/";
 
+// Your exact permanent key generator page URL integrated here!
+const PERM_KEY_PAGE_URL = "https://pixelontopp.github.io/Permanent-Key-Generator"; 
+
 const MINIMUM_TIME_REQUIRED = 15000; // 15 seconds bypass protection
 const BAN_DURATION = 120000; // 2 minutes bypass ban
+// ===============================================================
 
 window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -198,7 +214,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         fetch(`${BACKEND_URL}/addkey`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "text/plain" }, // Keeps your smooth text/plain mobile fix intact!
             body: JSON.stringify({ secretCode: "PIXELMASTER_2026", generatedKey: newPermanentKey })
         })
         .then(res => {
@@ -223,6 +239,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function generateKey(){
+    // Hard block if they already possess an active permanent key
     if(localStorage.getItem('pixelPermanentKey')) return;
 
     localStorage.setItem('clickTime', Date.now());
@@ -235,13 +252,36 @@ function generateKey(){
     }, 1000);
 }
 
+function goToPermanentPage() {
+    // Hard block if they already possess an active permanent key
+    if(localStorage.getItem('pixelPermanentKey')) return;
+
+    document.getElementById("status").style.color = "#6bbcff";
+    document.getElementById("status").innerHTML = "Opening Secret Code Portal...";
+
+    setTimeout(() => {
+        window.location.href = PERM_KEY_PAGE_URL;
+    }, 1000);
+}
+
 function showPermanentKey(key) {
     const statusDiv = document.getElementById("status");
     const genBtn = document.getElementById("genBtn");
+    const permBtn = document.getElementById("permBtn");
     
+    // Completely locks down regular generation
     genBtn.innerHTML = "Key Unlocked";
     genBtn.style.background = "#1e293b"; 
+    genBtn.style.color = "#64748b";
     genBtn.disabled = true;
+    
+    // Completely locks down permanent key generation page access
+    if (permBtn) {
+        permBtn.innerHTML = "Permanent Key Active";
+        permBtn.style.background = "#1e293b"; 
+        permBtn.style.color = "#64748b";
+        permBtn.disabled = true;
+    }
     
     statusDiv.innerHTML = `
         <div class="key-container">
@@ -270,10 +310,17 @@ function copyAndRedirect(key) {
 function startBanCountdown(duration) {
     const statusDiv = document.getElementById("status");
     const genBtn = document.getElementById("genBtn");
+    const permBtn = document.getElementById("permBtn");
     
     genBtn.disabled = true;
     genBtn.innerHTML = "System Locked";
     genBtn.style.background = "#ef4444"; 
+
+    if (permBtn) {
+        permBtn.disabled = true;
+        permBtn.style.background = "#1e293b";
+        permBtn.style.color = "#64748b";
+    }
 
     let timeRemaining = Math.ceil(duration / 1000);
     statusDiv.style.color = "#ff4a4a";
@@ -291,6 +338,13 @@ function startBanCountdown(duration) {
             genBtn.disabled = false;
             genBtn.innerHTML = "Generate Key";
             genBtn.style.background = "#3b82f6";
+
+            if (permBtn) {
+                permBtn.disabled = false;
+                permBtn.style.background = "#eab308";
+                permBtn.style.color = "#0f172a";
+            }
+
             statusDiv.innerHTML = "";
             window.history.replaceState({}, document.title, window.location.pathname);
         }
